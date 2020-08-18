@@ -209,17 +209,21 @@ with driver.session(database="neo4j") as session:
              RETURN id(author) AS node1, id(other) AS node2, 0 AS label""")
     test_missing_links = pd.DataFrame([dict(record) for record in result])    
     test_missing_links = test_missing_links.drop_duplicates()
-# end::test-positive-negative-examples[]    
+# end::test-positive-negative-examples[]
 
 # +
+# Compute positive and negative examples
+
 # tag::count-test-positive-negative[]
-test_df = test_missing_links.append(test_missing_links, ignore_index=True)
+test_df = test_missing_links.append(test_existing_links, ignore_index=True)
 test_df['label'] = test_df['label'].astype('category')
 
 count_class_0, count_class_1 = test_df.label.value_counts()
 print(f"Negative examples: {count_class_0}")
 print(f"Positive examples: {count_class_1}")
 # end::count-test-positive-negative[]
+
+# Down sample the negative examples
 
 # tag::down-sample-test[]
 df_class_0 = test_df[test_df['label'] == 0]
