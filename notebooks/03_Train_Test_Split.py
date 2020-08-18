@@ -235,3 +235,20 @@ df_test_under = pd.concat([df_class_0_under, df_class_1], axis=0)
 print('Random downsampling:')
 print(df_test_under.label.value_counts())
 # end::down-sample-test[]
+# -
+
+# Before we move on, let's have a look at the contents of our train and test DataFrames:
+
+# tag::train-preview[]
+df_train_under.sample(5)
+# end::train-preview[]
+
+# tag::test-preview[]
+df_test_under.sample(5)
+# end::test-preview[]
+
+# +
+# Save our DataFrames to CSV files for use in the next notebook
+
+df_train_under.to_csv("data/df_train_under.csv", index=False)
+df_test_under.to_csv("data/df_test_under.csv", index=False)
