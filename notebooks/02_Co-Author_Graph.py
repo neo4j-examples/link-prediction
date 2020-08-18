@@ -25,3 +25,27 @@ from neo4j import GraphDatabase
 driver = GraphDatabase.driver("bolt://link-prediction-neo4j", auth=("neo4j", "admin"))        
 print(driver.address) 
 # end::driver[]
+
+We can create the co-author graph by running the query below to do this:
+
+# +
+# tag::data-import[]
+query = """
+CALL apoc.periodic.iterate(
+  "MATCH (a1)<-[:AUTHOR]-(paper)-[:AUTHOR]->(a2:Author)
+   WITH a1, a2, paper
+   ORDER BY a1, paper.year
+   RETURN a1, a2, collect(paper)[0].year AS year, count(*) AS collaborations",
+  "MERGE (a1)-[coauthor:CO_AUTHOR {year: year}]-(a2)
+   SET coauthor.collaborations = collaborations", 
+  {batchSize: 100})
+"""
+
+with driver.session(database="neo4j") as session:
+    result = session.run(query)
+    for row in result:
+        print(row)
+# end::data-import[]        
+# -
+
+# Now that we've created our co-author graph, we want to come up with an approach that will allow us to predict future links (relationships) that will be created between people. 
