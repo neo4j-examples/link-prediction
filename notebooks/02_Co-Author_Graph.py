@@ -23,8 +23,10 @@ from neo4j import GraphDatabase
 
 # tag::driver[]
 driver = GraphDatabase.driver("bolt://link-prediction-neo4j", auth=("neo4j", "admin"))
-print(driver.address)
 # end::driver[]
+
+print(driver.address)
+
 
 # We can create the co-author graph by running the query below to do this:
 
