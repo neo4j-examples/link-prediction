@@ -1,4 +1,5 @@
 = Link Prediction with Neo4j and The Graph Data Science Library
 
-* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/00_Environment.ipynb[Setup environment^]
-* 
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/00_Environment.ipynb[Setup environment]
+*  https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Load data]
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Create co-author graph]
