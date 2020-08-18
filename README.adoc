@@ -1,5 +1,7 @@
 = Link Prediction with Neo4j and The Graph Data Science Library
 
+This repository contains both Jupyter notebooks and Python scripts (created by https://github.com/mwouts/jupytext) for solving a link prediction problem using Neo4j's Graph Data Science Library and scikit-learn.
+
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/00_Environment.ipynb[Setup environment]
 *  https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Load data]
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Create co-author graph]
