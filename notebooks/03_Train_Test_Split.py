@@ -125,3 +125,109 @@ with driver.session(database="neo4j") as session:
     result = session.run(query)
     df = pd.DataFrame([dict(record) for record in result])
 df
+# -
+
+# We have a split of 52-48, which is a bit on the high side, but should be ok. Now for the __negative examples__.
+
+# ### Negative examples
+#
+# The simplest approach would be to use all pair of nodes that don’t have a relationship. __The problem with this approach is that there are significantly more examples of pairs of nodes that don’t have a relationship than there are pairs of nodes that do__.
+#
+# The maximum number of negative examples is equal to:
+#
+# ```
+# # negative examples = (# nodes)² - (# relationships) - (# nodes)
+# ```
+#
+# i.e. the number of nodes squared, minus the relationships that the graph has, minus self relationships.
+#
+# If we use all of these negative examples in our training set we will have a massive class imbalance — there are many negative examples and relatively few positive ones.
+#
+# A model trained using data that’s this imbalanced will achieve very high accuracy by __predicting that any pair of nodes don’t have a relationship__ between them, which is not quite what we want!
+#
+# So we need to try and reduce the number of negative examples. An approach described in several link prediction papers is to use pairs of nodes that are a __specific number of hops away from each other__.
+#
+# This will significantly reduce the number of negative examples, although there will still be a lot more negative examples than positive.
+#
+# To solve this problem we either need to down sample the negative examples or up sample the positive examples.
+#
+# We're going to take the down sampling approach in this guide, and the following function will do this for us:
+
+# tag::positive-negative-examples[]
+with driver.session(database="neo4j") as session:
+    result = session.run("""
+             MATCH (author:Author)-[:CO_AUTHOR_EARLY]->(other:Author)
+             RETURN id(author) AS node1, id(other) AS node2, 1 AS label""")
+    train_existing_links = pd.DataFrame([dict(record) for record in result])
+
+    result = session.run("""
+             MATCH (author:Author)
+             WHERE (author)-[:CO_AUTHOR_EARLY]-()
+             MATCH (author)-[:CO_AUTHOR_EARLY*2..3]-(other)
+             WHERE not((author)-[:CO_AUTHOR_EARLY]-(other))
+             RETURN id(author) AS node1, id(other) AS node2, 0 AS label""")
+    train_missing_links = pd.DataFrame([dict(record) for record in result])    
+    train_missing_links = train_missing_links.drop_duplicates()
+# end::positive-negative-examples[]
+
+# +
+# tag::count-positive-negative[]
+training_df = train_missing_links.append(train_existing_links, ignore_index=True)
+training_df['label'] = training_df['label'].astype('category')
+
+count_class_0, count_class_1 = training_df.label.value_counts()
+print(f"Negative examples: {count_class_0}")
+print(f"Positive examples: {count_class_1}")
+# end::count-positive-negative[]
+
+# tag::down-sample[]
+df_class_0 = training_df[training_df['label'] == 0]
+df_class_1 = training_df[training_df['label'] == 1]
+
+df_class_0_under = df_class_0.sample(count_class_1)
+df_train_under = pd.concat([df_class_0_under, df_class_1], axis=0)
+
+print('Random downsampling:')
+print(df_train_under.label.value_counts())
+# end::down-sample[]
+# -
+
+# Let's now do the same thing for our test set:
+
+# tag::test-positive-negative-examples[]
+with driver.session(database="neo4j") as session:
+    result = session.run("""
+             MATCH (author:Author)-[:CO_AUTHOR_LATE]->(other:Author)
+             RETURN id(author) AS node1, id(other) AS node2, 1 AS label""")
+    test_existing_links = pd.DataFrame([dict(record) for record in result])
+
+    result = session.run("""
+             MATCH (author:Author)
+             WHERE (author)-[:CO_AUTHOR_LATE]-()
+             MATCH (author)-[:CO_AUTHOR_LATE*2..3]-(other)
+             WHERE not((author)-[:CO_AUTHOR_LATE]-(other))
+             RETURN id(author) AS node1, id(other) AS node2, 0 AS label""")
+    test_missing_links = pd.DataFrame([dict(record) for record in result])    
+    test_missing_links = test_missing_links.drop_duplicates()
+# end::test-positive-negative-examples[]    
+
+# +
+# tag::count-test-positive-negative[]
+test_df = test_missing_links.append(test_missing_links, ignore_index=True)
+test_df['label'] = test_df['label'].astype('category')
+
+count_class_0, count_class_1 = test_df.label.value_counts()
+print(f"Negative examples: {count_class_0}")
+print(f"Positive examples: {count_class_1}")
+# end::count-test-positive-negative[]
+
+# tag::down-sample-test[]
+df_class_0 = test_df[test_df['label'] == 0]
+df_class_1 = test_df[test_df['label'] == 1]
+
+df_class_0_under = df_class_0.sample(count_class_1)
+df_test_under = pd.concat([df_class_0_under, df_class_1], axis=0)
+
+print('Random downsampling:')
+print(df_test_under.label.value_counts())
+# end::down-sample-test[]
