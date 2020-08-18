@@ -24,8 +24,7 @@ from neo4j import GraphDatabase
 # +
 # tag::driver[]
 bolt_uri = "bolt://link-prediction-neo4j"
-auth = ("neo4j", "admin")
-driver = GraphDatabase.driver(bolt_uri, auth=auth)        
+driver = GraphDatabase.driver(bolt_uri, auth=("neo4j", "admin"))        
 # end::driver[]
 
 print(driver.address) 
