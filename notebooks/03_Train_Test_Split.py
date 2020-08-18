@@ -2,6 +2,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: py:light,ipynb
 #     text_representation:
 #       extension: .py
 #       format_name: light
@@ -13,7 +14,7 @@
 #     name: python3
 # ---
 
-# # Train and test datasets 
+# # Train and test datasets
 #
 # Now that we've decided we're going to use a machine learning approach, we need to come up with train and test datasets on which we can build, and then evaluate a model.
 #
@@ -38,7 +39,7 @@ from neo4j import GraphDatabase
 
 # tag::imports[]
 import pandas as pd
-import matplotlib 
+import matplotlib
 import matplotlib.pyplot as plt
 
 plt.style.use('fivethirtyeight')
@@ -57,7 +58,7 @@ print(driver.address)
 # +
 # tag::determine-split[]
 query = """
-MATCH p=()-[r:CO_AUTHOR]->() 
+MATCH p=()-[r:CO_AUTHOR]->()
 WITH r.year AS year, count(*) AS count
 ORDER BY year
 RETURN toString(year) AS year, count
@@ -82,16 +83,16 @@ plt.show()
 # +
 # tag::sub-graphs[]
 query = """
-MATCH (a)-[r:CO_AUTHOR]->(b) 
+MATCH (a)-[r:CO_AUTHOR]->(b)
 where r.year < 2006
 MERGE (a)-[:CO_AUTHOR_EARLY {year: r.year}]-(b);
 """
 
 with driver.session(database="neo4j") as session:
     display(session.run(query).consume().counters)
-    
+
 query = """
-MATCH (a)-[r:CO_AUTHOR]->(b) 
+MATCH (a)-[r:CO_AUTHOR]->(b)
 where r.year >= 2006
 MERGE (a)-[:CO_AUTHOR_LATE {year: r.year}]-(b);
 """
@@ -101,4 +102,26 @@ with driver.session(database="neo4j") as session:
 # end::sub-graphs[]
 # -
 
+# Let's quickly check how many co-author relationship we have in each of these sub graphs:
 
+# +
+query = """
+MATCH ()-[:CO_AUTHOR_EARLY]->()
+RETURN count(*) AS count
+"""
+
+with driver.session(database="neo4j") as session:
+    result = session.run(query)
+    df = pd.DataFrame([dict(record) for record in result])
+df
+
+# +
+query = """
+MATCH ()-[:CO_AUTHOR_LATE]->()
+RETURN count(*) AS count
+"""
+
+with driver.session(database="neo4j") as session:
+    result = session.run(query)
+    df = pd.DataFrame([dict(record) for record in result])
+df
