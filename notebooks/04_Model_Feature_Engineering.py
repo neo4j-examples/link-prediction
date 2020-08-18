@@ -14,9 +14,9 @@
 #     name: python3
 # ---
 
-# # Choosing a machine learning algorithm
+# # Feature Engineering
 #
-# We’ll create our machine learning pipeline based on a random forest classifier. This method is well suited as our data set will be comprised of a mix of strong and weak features. While the weak features will sometimes be helpful, the random forest method will ensure we don’t create a model that only fits our training data.
+# In this notebook we're going to generate features for our link prediction classifier.
 
 # +
 from neo4j import GraphDatabase
@@ -40,10 +40,6 @@ print(driver.address)
 # -
 
 # We can create our classifier with the following code:
-
-# tag::create-classifier[]
-classifier = RandomForestClassifier(n_estimators=30, max_depth=10, random_state=0)
-# end::create-classifier[]
 
 # +
 # Load the CSV files saved in the train/test notebook
@@ -315,6 +311,12 @@ df_train_under.sample(5)
 # tag::test-after-features[]
 df_test_under.sample(5)
 # end::test-after-features[]
+
+# +
+# Save our DataFrames to CSV files for use in the next notebook
+
+df_train_under.to_csv("data/df_train_under_all.csv", index=False)
+df_test_under.to_csv("data/df_test_under_all.csv", index=False)
 
 # +
 # tag::train-model[]
