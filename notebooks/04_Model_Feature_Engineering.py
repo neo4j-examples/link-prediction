@@ -97,6 +97,7 @@ df_test_under = apply_graphy_features(df_test_under, "CO_AUTHOR")
 # We'll start by running the [triangle count](clusteringCoefficientProperty) algorithm over our test and train sub graphs. This algorithm will return the number of triangles that each node forms, as well as each node's clustering coefficient. The clustering coefficient of a node indicates the likelihood that its neighbours are also connected.
 
 # +
+# tag::train-triangles[]
 query = """
 CALL gds.triangleCount.write({
   nodeProjection: 'Author',
@@ -112,10 +113,12 @@ CALL gds.triangleCount.write({
 
 with driver.session(database="neo4j") as session:
     result = session.run(query)
+# end::train-triangles[]    
     df = pd.DataFrame([dict(record) for record in result])
 df
 
 # +
+# tag::test-triangles[]
 query = """
 CALL gds.triangleCount.write({
   nodeProjection: 'Author',
@@ -131,10 +134,12 @@ CALL gds.triangleCount.write({
 
 with driver.session(database="neo4j") as session:
     result = session.run(query)
+# end::test-triangles[]    
     df = pd.DataFrame([dict(record) for record in result])
 df    
 
 # +
+# tag::train-coefficient[]
 query = """
 CALL gds.localClusteringCoefficient.write({
   nodeProjection: 'Author',
@@ -150,13 +155,37 @@ CALL gds.localClusteringCoefficient.write({
 
 with driver.session(database="neo4j") as session:
     result = session.run(query)
+# end::train-coefficient[]
     df = pd.DataFrame([dict(record) for record in result])
 df
+
+# +
+# tag::test-coefficient[]
+query = """
+CALL gds.localClusteringCoefficient.write({
+  nodeProjection: 'Author',
+  relationshipProjection: {
+    CO_AUTHOR_EARLY: {
+      type: 'CO_AUTHOR',
+      orientation: 'UNDIRECTED'
+    }
+  },
+  writeProperty: 'coefficientTest'
+});
+"""
+
+with driver.session(database="neo4j") as session:
+    result = session.run(query)
+# end::test-coefficient[]
+    df = pd.DataFrame([dict(record) for record in result])
+df
+
+
 # -
 
-The following function will add these features to our train and test DataFrames:
+# The following function will add these features to our train and test DataFrames:
 
-
+# tag::triangles-coefficient-features[]
 def apply_triangles_features(data, triangles_prop, coefficient_prop):
     query = """
     UNWIND $pairs AS pair
@@ -181,10 +210,13 @@ def apply_triangles_features(data, triangles_prop, coefficient_prop):
         features = pd.DataFrame([dict(record) for record in result])       
     
     return pd.merge(data, features, on = ["node1", "node2"])
+# end::triangles-coefficient-features[]
 
 
+# tag::apply-triangles-coefficient-features[]
 df_train_under = apply_triangles_features(df_train_under, "trianglesTrain", "coefficientTrain")
 df_test_under = apply_triangles_features(df_test_under, "trianglesTest", "coefficientTest")
+# end::apply-triangles-coefficient-features[]
 
 df_train_under.sample(5)
 
@@ -197,8 +229,16 @@ df_test_under.sample(5)
 # We'll run two community detection algorithms over the train and test sub graphs - Label Propagation and Louvain. First up, Label Propagation: 
 
 # +
+# tag::train-lpa[]
 query = """
-CALL gds.labelPropagation.write({
+CALL gds.labelPrrojection: {
+    CO_AUTHOR_EARLY: {
+      type: 'CO_AUTHOR_EARLY',
+      orientation: 'UNDIRECTED'
+    }
+  },
+  writeProperty: "partitionTrain"
+});opagation.write({
   nodeProjection: "Author",
   relationshipProjection: {
     CO_AUTHOR_EARLY: {
@@ -212,10 +252,12 @@ CALL gds.labelPropagation.write({
 
 with driver.session(database="neo4j") as session:
     result = session.run(query)
+# end::train-lpa[]
     df = pd.DataFrame([dict(record) for record in result])
 df    
 
 # +
+# tag::test-lpa[]
 query = """
 CALL gds.labelPropagation.write({
   nodeProjection: "Author",
@@ -231,10 +273,15 @@ CALL gds.labelPropagation.write({
 
 with driver.session(database="neo4j") as session:
     result = session.run(query)
+# end::test-lpa[]    
     df = pd.DataFrame([dict(record) for record in result])
 df    
+# -
+
+# And now Louvain. The Louvain algorithm returns intermediate communities, which are useful for finding fine grained communities that exist in a graph. We'll add a property to each node containing the community revealed on the first iteration of the algorithm:
 
 # +
+# tag::train-louvain[]
 query = """
 CALL gds.louvain.stream({
   nodeProjection: 'Author',
@@ -253,8 +300,10 @@ SET node.louvainTrain = smallestCommunity;
 
 with driver.session(database="neo4j") as session:
     display(session.run(query).consume().counters)
+# end::train-louvain[]    
 
 # +
+# tag::test-louvain[]
 query = """
 CALL gds.louvain.stream({
   nodeProjection: 'Author',
@@ -273,10 +322,10 @@ SET node.louvainTest = smallestCommunity;
 
 with driver.session(database="neo4j") as session:
     display(session.run(query).consume().counters)
-
-
+# end::test-louvain[]    
 # -
 
+# tag::community-features[]
 def apply_community_features(data, partition_prop, louvain_prop):
     query = """
     UNWIND $pairs AS pair
@@ -299,10 +348,13 @@ def apply_community_features(data, partition_prop, louvain_prop):
         features = pd.DataFrame([dict(record) for record in result])
     
     return pd.merge(data, features, on = ["node1", "node2"])
+# end::community-features[]
 
 
+# tag::apply-community-features[]
 df_train_under = apply_community_features(df_train_under, "partitionTrain", "louvainTrain")
 df_test_under = apply_community_features(df_test_under, "partitionTest", "louvainTest")
+# end::apply-community-features[]
 
 # tag::train-after-features[]
 df_train_under.sample(5)
