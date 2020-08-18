@@ -70,8 +70,35 @@ with driver.session(database="neo4j") as session:
 ax = by_year.plot(kind='bar', x='year', y='count', legend=None, figsize=(15,8))
 ax.xaxis.set_label_text("")
 plt.tight_layout()
+
 plt.show()
 # end::determine-split[]
 # -
 
-# Now that we've created our co-author graph, we want to come up with an approach that will allow us to predict future links (relationships) that will be created between people.
+# It looks like 2006 would act as a good year on which to split the data. We'll take all the co-authorships from 2005 and earlier as our train graph, and everything from 2006 onwards as the test graph.
+#
+# Let's create explicit `CO_AUTHOR_EARLY` and `CO_AUTHOR_LATE` relationships in our graph based on that year. The following code will create these relationships for us:
+
+# +
+# tag::sub-graphs[]
+query = """
+MATCH (a)-[r:CO_AUTHOR]->(b) 
+where r.year < 2006
+MERGE (a)-[:CO_AUTHOR_EARLY {year: r.year}]-(b);
+"""
+
+with driver.session(database="neo4j") as session:
+    display(session.run(query).consume().counters)
+    
+query = """
+MATCH (a)-[r:CO_AUTHOR]->(b) 
+where r.year >= 2006
+MERGE (a)-[:CO_AUTHOR_LATE {year: r.year}]-(b);
+"""
+
+with driver.session(database="neo4j") as session:
+    display(session.run(query).consume().counters)
+# end::sub-graphs[]
+# -
+
+
