@@ -1,6 +1,6 @@
 = Link Prediction with Neo4j and The Graph Data Science Library
 
-This repository contains both Jupyter notebooks and Python scripts (created by https://github.com/mwouts/jupytext[jupytext^]) for solving a link prediction problem using Neo4j's Graph Data Science Library and scikit-learn.
+This repository contains both Jupyter notebooks for solving a link prediction problem using Neo4j's Graph Data Science Library and scikit-learn.
 
 == Docker
 
@@ -21,4 +21,9 @@ If you want to view the notebooks online, you can find them in the following loc
 
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/00_Environment.ipynb[Setup environment]
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Load data]
-* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Create co-author graph]
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/02_Co-Author_Graph.ipynb[Create co-author graph]
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/03_Train_Test_Split.ipynb[Create Train/Test datasets]
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/04_Model_Feature_Engineering.ipynb[Graph Feature Engineering]
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/05_Train_Evaluate_Model.ipynb[Train and Evaluate model]
+
+
