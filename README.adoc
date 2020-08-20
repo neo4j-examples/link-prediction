@@ -4,11 +4,11 @@ This repository contains both Jupyter notebooks for solving a link prediction pr
 
 The associated developer guide for this repository can be found at https://neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/[neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/^]
 
-= Running the examples
+== Running the examples
 
 You can run the examples by following the instructions below:
 
-== Download code from GitHub
+=== Download code from GitHub
 
 [source, bash]
 ----
@@ -16,7 +16,7 @@ git clone https://github.com/neo4j-examples/link-prediction.git
 cd link-prediction
 ----
 
-== Launch Neo4j and Jupyter Notebooks
+=== Launch Neo4j and Jupyter Notebooks
 
 You can launch the notebooks and Neo4j by using the following command:
 
