@@ -2,6 +2,8 @@
 
 This repository contains both Jupyter notebooks for solving a link prediction problem using Neo4j's Graph Data Science Library and scikit-learn.
 
+The associated developer guide for this repository can be found at https://neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/[neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/^]
+
 = Running the examples
 
 You can run the examples by following the instructions below:
