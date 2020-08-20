@@ -28,6 +28,35 @@ docker-compose up
 This will spin up a Neo4j server and Jupyter session.
 The terminal output will contain instructions on how to connect to both of those.
 
+.Truncated output
+[source, text]
+----
+Starting link-prediction-jupyter ... done
+Starting link-prediction-neo4j   ... done
+Attaching to link-prediction-neo4j, link-prediction-jupyter
+link-prediction-jupyter | Executing the command: jupyter notebook
+link-prediction-neo4j | Changed password for user 'neo4j'.
+...
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] The Jupyter Notebook is running at:
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] http://5bf4a4a75310:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp]  or http://127.0.0.1:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+link-prediction-jupyter | [C 05:11:37.151 NotebookApp] 
+link-prediction-jupyter |     
+link-prediction-jupyter |     To access the notebook, open this file in a browser:
+link-prediction-jupyter |         file:///home/jovyan/.local/share/jupyter/runtime/nbserver-6-open.html
+link-prediction-jupyter |     Or copy and paste one of these URLs:
+link-prediction-jupyter |         http://5bf4a4a75310:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter |      or http://127.0.0.1:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+...
+link-prediction-neo4j | Starting Neo4j.
+link-prediction-neo4j | 2020-08-20 05:11:44.729+0000 INFO  ======== Neo4j 4.0.6 ========
+link-prediction-neo4j | 2020-08-20 05:11:44.734+0000 INFO  Starting...
+...
+link-prediction-neo4j | 2020-08-20 05:11:56.135+0000 INFO  Remote interface available at http://localhost:7474/
+----
+
+
 == Viewing online
 
 If you want to view the notebooks online, you can find them in the following locations:
