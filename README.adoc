@@ -48,7 +48,7 @@ link-prediction-neo4j | 2020-08-20 05:11:44.734+0000 INFO  Starting...
 link-prediction-neo4j | 2020-08-20 05:11:56.135+0000 INFO  Remote interface available at http://localhost:7474/
 ----
 
-* The Jupyter notebook is available at http://localhost:8888. We'll need to enter the token from the output the first time that we launch it.
+* The Jupyter notebook is available at http://localhost:8888. You'll need to enter the token from the output the first time that you launch it.
 * Neo4j is available at http://localhost:7474/
 
 == Viewing online
