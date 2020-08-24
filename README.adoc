@@ -1,10 +1,24 @@
-= Link Prediction with Neo4j and The Graph Data Science Library
+= Link Prediction with Neo4j's Graph Data Science Library
 
 This repository contains both Jupyter notebooks for solving a link prediction problem using Neo4j's Graph Data Science Library and scikit-learn.
 
-== Docker
+The associated developer guide for this repository can be found at https://neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/[neo4j.com/developer/graph-data-science/link-prediction/scikit-learn/^]
 
-If you use Docker, you can launch the notebooks and Neo4j by using the following command:
+== Running the examples
+
+You can run the examples by following the instructions below:
+
+=== Download code from GitHub
+
+[source, bash]
+----
+git clone https://github.com/neo4j-examples/link-prediction.git
+cd link-prediction
+----
+
+=== Launch Neo4j and Jupyter Notebooks
+
+You can launch the notebooks and Neo4j by using the following command:
 
 [source,bash]
 ----
@@ -12,12 +26,34 @@ docker-compose up
 ----
 
 This will spin up a Neo4j server and Jupyter session.
-The terminal output will contain instructions on how to connect to both of those.
+The terminal output will look a bit like this:
+
+[source, text]
+----
+...
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] The Jupyter Notebook is running at:
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] http://5bf4a4a75310:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp]  or http://127.0.0.1:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter | [I 05:11:37.148 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+link-prediction-jupyter |     To access the notebook, open this file in a browser:
+link-prediction-jupyter |         file:///home/jovyan/.local/share/jupyter/runtime/nbserver-6-open.html
+link-prediction-jupyter |     Or copy and paste one of these URLs:
+link-prediction-jupyter |         http://5bf4a4a75310:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+link-prediction-jupyter |      or http://127.0.0.1:8888/?token=06ce9ad89428f765734540f3f283cc0d3ad5b1fe0c51746a
+...
+link-prediction-neo4j | Starting Neo4j.
+link-prediction-neo4j | 2020-08-20 05:11:44.729+0000 INFO  ======== Neo4j 4.0.6 ========
+link-prediction-neo4j | 2020-08-20 05:11:44.734+0000 INFO  Starting...
+...
+link-prediction-neo4j | 2020-08-20 05:11:56.135+0000 INFO  Remote interface available at http://localhost:7474/
+----
+
+* The Jupyter notebook is available at http://localhost:8888. You'll need to enter the token from the output the first time that you launch it.
+* Neo4j is available at http://localhost:7474/
 
 == Viewing online
 
 If you want to view the notebooks online, you can find them in the following locations:
-
 
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/00_Environment.ipynb[Setup environment]
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/01_DataLoading.ipynb[Load data]
