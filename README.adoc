@@ -62,4 +62,4 @@ If you want to view the notebooks online, you can find them in the following loc
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/04_Model_Feature_Engineering.ipynb[Graph Feature Engineering]
 * https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/05_Train_Evaluate_Model.ipynb[Train and Evaluate model]
 
-
+* https://github.com/neo4j-examples/link-prediction/blob/master/notebooks/06_SageMaker.ipynb[Train and Evaluate model using AWS Sagemaker Autopilot]
